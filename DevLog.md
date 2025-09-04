@@ -1,5 +1,15 @@
 # DevLog
 
+## Technologies and Libraries
+
+For this project, I chose the following stack:
+- **Front-end**: Vue 3 + Vite, Pinia, Vue Router, Axios, Bootstrap 5
+- **Back-end**: Spring Boot 3 (Web, Security, Validation, Data JPA, Liquibase), JWT
+- **DB**: PostgreSQL in Docker
+
+
+---
+
 ## Milestone 1 — Setup and Scaffolding
 
 On the frontend side, everything was smooth - I have already created Vue projects a few times, so generating one with Vite was straightforward. In my previous work I used Vuex, but since I have heard a lot about **Pinia** being the modern alternative, I decided to give it a try. 
