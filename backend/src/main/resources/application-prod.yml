@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5436/pets?sslmode=disable
+    url: jdbc:postgresql://localhost:5436/pets
     username: postgres
     password: postgres
   jpa: # Java Persistence API
@@ -14,3 +14,8 @@ spring:
 
 server:
   port: 8080
+
+app:
+  jwt:
+    secret: "thisIsMysecregtfrdesww233eggtffeeddgkjjhhtdhttebd54ndhdhfhhhshs8877465sbbdd"
+    expirationMillis: 86400000 # 24h
