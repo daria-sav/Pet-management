@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -45,9 +44,9 @@ public class SecurityConfig {
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                    .requestMatchers(HttpMethod.GET, "/api/ping").permitAll()
-                    .requestMatchers("/api/auth/login").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/lookups/**").permitAll()
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/lookups/**").permitAll()
+                    .requestMatchers("/api/ping").permitAll()
                     .anyRequest().authenticated()
             );
         // Add the JWT Token filter before the UsernamePasswordAuthenticationFilter
@@ -77,7 +76,7 @@ public class SecurityConfig {
     @Bean
     UrlBasedCorsConfigurationSource  corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8080"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

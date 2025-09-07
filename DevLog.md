@@ -27,3 +27,4 @@ Another challenge was Spring Security. By default, it locked everything and redi
 - **Day 3**: ~3 hours coding + ~1.5 hours studying Spring Boot and Liquibase
 - **Day 4**: ~2 hours coding + ~2 hours studying Spring Boot Security
 - **Day 5**: ~4 hours coding + ~2 hours studying Spring Boot Security
+- **Day 6**: ~4 hours coding + ~1 hours studying Spring Boot Security and Docker

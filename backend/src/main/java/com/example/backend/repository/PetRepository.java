@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PetRepository extends JpaRepository<Pet, Long> {
+    boolean existsByIdentificationNumberAndIdNot(String identificationNumber, Long id);
+    boolean existsByIdentificationNumber(String identificationNumber);
+
     List<Pet> findAllByOwner_Id(Long ownerId);
     Optional<Pet> findByIdAndOwner_Id(Long id, Long ownerId);
-    boolean existsByIdentificationNumber(String identificationNumber);
+    Optional<Pet> findByIdAndOwnerUsername(Long id, String username);
 }

@@ -2,9 +2,11 @@ package com.example.backend.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.backend.dto.PetDto;
 import com.example.backend.dto.PetUpsertDto;
@@ -79,6 +81,24 @@ public class PetService {
         if (u == null) throw new RuntimeException("User not found: " + username);
         return u.getId();
     }
+
+    public PetDto getOne(Long id, String username) {
+        Pet petike = petRepo.findByIdAndOwnerUsername(id, username)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pet not found"));
+
+        return toDto(petike); 
+    }
+
+    public boolean isIdentificationAvailable(String value, Long excludeId) {
+    if (value == null || value.isBlank()) {
+        return false;
+    }
+    if (excludeId == null) {
+        return !petRepo.existsByIdentificationNumber(value);
+    } else {
+        return !petRepo.existsByIdentificationNumberAndIdNot(value, excludeId);
+    }
+}
 
     private PetDto toDto(Pet petike) {
         PetDto dto = new PetDto();

@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   postgres:
     image: postgres:16
@@ -8,10 +7,33 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: pets
-    ports:
-      - "5436:5432"
+    # ports:
+    #   - "5436:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  
+  backend:
+    build: ./backend
+    container_name: pets-backend
+    depends_on:
+      - postgres
+    # ports:
+    #   - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pets
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      APP_JWT_SECRET: thisIsMysecregtfrdesww233eggtffeeddgkjjhhtdhttebd54ndhdhfhhhshs8877465sbbdd
+      APP_JWT_EXPIRATIONMILLIS: 86400000
+  
+  frontend:
+    build: ./frontend
+    container_name: pets-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"   # open SPA on http://localhost:8080
 
 volumes:
   postgres_data:
