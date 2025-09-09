@@ -28,3 +28,7 @@ Another challenge was Spring Security. By default, it locked everything and redi
 - **Day 4**: ~2 hours coding + ~2 hours studying Spring Boot Security
 - **Day 5**: ~4 hours coding + ~2 hours studying Spring Boot Security
 - **Day 6**: ~4 hours coding + ~1 hours studying Spring Boot Security and Docker
+- **Day 7**: ~4 hours coding + ~1 hours studying Spring Boot Security and Docker
+- **Day 8**: ~4 hours coding + ~2 hours studying Bootstrap
+- **Day 9**: ~6 hours coding + ~3 hours studying Bootstrap and Vue
+- **Day 10**: ~4 hours coding + ~3 hours studying Testinggit add

@@ -52,8 +52,8 @@ public class PetsController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        petService.deleteForCurrentUser(id);
+    public void deactivate(@PathVariable Long id) {
+        petService.deactivate(id);
     }
 
     @GetMapping("/check-identification")

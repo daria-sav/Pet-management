@@ -22,10 +22,6 @@
 
               <p v-if="error" class="text-danger mt-3">{{ error }}</p>
             </form>
-
-            <div class="small text-muted mt-3">
-              Use a seeded user (e.g., <code>alice</code>) with its plain password.
-            </div>
           </div>
         </div>
       </div>
@@ -37,6 +33,7 @@
 import { ref } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useRouter } from 'vue-router';
+import { useToasts } from '../stores/toasts';
 
 const username = ref('');
 const password = ref('');
@@ -44,6 +41,7 @@ const loading = ref(false);
 const error = ref('');
 const auth = useAuthStore();
 const router = useRouter();
+const toast = useToasts();
 
 const onSubmit = async () => {
   error.value = '';
@@ -53,6 +51,7 @@ const onSubmit = async () => {
     router.push({ name: 'pets' });
   } catch (e) {
     error.value = 'Invalid credentials';
+    toast.error('Invalid credentials');
   } finally {
     loading.value = false;
   }

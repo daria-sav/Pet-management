@@ -1,23 +1,30 @@
 <template>
   <nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="/">Pet Management</a>
+      <RouterLink to="/" class="navbar-brand">Pet Management</RouterLink>
+
       <ul class="navbar-nav ms-auto" v-if="auth.token">
-        <li class="nav-item me-3 text-white-50">Hello, {{ auth.username }}</li>
+        <li class="nav-item me-3 d-flex align-items-center text-white-50">
+          Hello, {{ auth.username }}
+        </li>
         <li class="nav-item">
           <button class="btn btn-outline-light btn-sm" @click="onLogout">Logout</button>
         </li>
       </ul>
     </div>
   </nav>
+
   <main class="container py-4">
-    <router-view />
+    <RouterView />
   </main>
+
+  <Toasts />
 </template>
 
 <script setup>
 import { useAuthStore } from './stores/auth';
-import { useRouter } from 'vue-router';
+import { useRouter, RouterLink, RouterView } from 'vue-router';
+import Toasts from './ui/Toasts.vue';
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -27,7 +34,3 @@ const onLogout = () => {
   router.push({ name: 'login' });
 };
 </script>
-
-<style>
-body { background: #f8f9fa; }
-</style>

@@ -34,7 +34,7 @@ public class PetService {
     @Transactional(readOnly = true)
     public List<PetDto> listForCurrentUser() {
         Long ownerId = currentUserId();
-        return petRepo.findAllByOwner_Id(ownerId).stream().map(this::toDto).toList();
+        return petRepo.findAllByOwnerIdAndActiveTrueOrderByIdDesc(ownerId).stream().map(this::toDto).toList();
     }
 
     @Transactional
@@ -55,7 +55,7 @@ public class PetService {
     @Transactional
     public PetDto updateForCurrentUser(Long id, PetUpsertDto dto) {
         Long ownerId = currentUserId();
-        Pet petike = petRepo.findByIdAndOwner_Id(id, ownerId).orElseThrow(); 
+        Pet petike = petRepo.findByIdAndOwner_IdAndActiveTrue(id, ownerId).orElseThrow(); 
         petike.setName(dto.name);
         petike.setIdentificationNumber(dto.identificationNumber);
         petike.setFurColor(dto.furColor);
@@ -68,13 +68,6 @@ public class PetService {
         return toDto(petike);
     }
 
-    @Transactional
-    public void deleteForCurrentUser(Long id) {
-        Long ownerId = currentUserId();
-        Pet petike = petRepo.findByIdAndOwner_Id(id, ownerId).orElseThrow();
-        petRepo.delete(petike);
-    }
-
     private Long currentUserId() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User u = userRepo.findByUsername(username);
@@ -83,22 +76,39 @@ public class PetService {
     }
 
     public PetDto getOne(Long id, String username) {
-        Pet petike = petRepo.findByIdAndOwnerUsername(id, username)
+        Pet petike = petRepo.findByIdAndOwnerUsernameAndActiveTrue(id, username)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pet not found"));
 
         return toDto(petike); 
     }
 
     public boolean isIdentificationAvailable(String value, Long excludeId) {
-    if (value == null || value.isBlank()) {
-        return false;
+        if (value == null || value.isBlank()) {
+            return false;
+        }
+        if (excludeId == null) {
+            return !petRepo.existsByIdentificationNumber(value);
+        } else {
+            return !petRepo.existsByIdentificationNumberAndIdNot(value, excludeId);
+        }
     }
-    if (excludeId == null) {
-        return !petRepo.existsByIdentificationNumber(value);
-    } else {
-        return !petRepo.existsByIdentificationNumberAndIdNot(value, excludeId);
+
+    public List<Pet> listActiveForUser(Long ownerId) {
+        return petRepo.findAllByOwnerIdAndActiveTrueOrderByIdDesc(ownerId);
     }
-}
+
+    public Pet getForUser(Long id, Long ownerId) {
+        return petRepo.findByIdAndOwner_IdAndActiveTrue(id, ownerId)
+                   .orElseThrow(() -> new IllegalArgumentException("Pet not found"));
+    }
+
+    @Transactional
+    public void deactivate(Long id) {
+        Long ownerId = currentUserId();
+        Pet p = getForUser(id, ownerId);
+        p.setActive(false);
+    }
+
 
     private PetDto toDto(Pet petike) {
         PetDto dto = new PetDto();
@@ -110,6 +120,7 @@ public class PetService {
         dto.typeName = petike.getType().getName();
         dto.countryId = petike.getCountry() == null ? null : petike.getCountry().getId();
         dto.countryName = petike.getCountry() == null ? null : petike.getCountry().getName();
+        dto.active = petike.getActive();
         return dto;
     }
 }

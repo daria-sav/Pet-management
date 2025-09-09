@@ -30,6 +30,9 @@ public class Pet {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -45,4 +48,6 @@ public class Pet {
     public void setCountry(Country country) { this.country = country; }
     public User getOwner() { return owner; }
     public void setOwner(User owner) { this.owner = owner; }
+    public boolean getActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }

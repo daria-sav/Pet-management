@@ -2,7 +2,7 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
     
     <!-- ===== ChangeSet #1: base tables ===== -->
     <changeSet id="1-create-tables" author="daria">
@@ -121,21 +121,58 @@
     </changeSet>
 
     <changeSet id="3-seed-users" author="daria" context="prod">
-    <insert tableName="users">
-        <column name="username" value="alice"/>
-        <column name="password_hash" value="$2a$12$otlsV/6JDP3REsmPaNm6U.kSG6L34wD.dYkDyqrGrntutL1GcgWpu"/>
-    </insert>
+        <insert tableName="users">
+            <column name="username" value="alice"/>
+            <column name="password_hash" value="$2a$12$otlsV/6JDP3REsmPaNm6U.kSG6L34wD.dYkDyqrGrntutL1GcgWpu"/>
+        </insert>
 
-    <insert tableName="users">
-        <column name="username" value="user"/>
-        <column name="password_hash" value="$2a$12$1f0Jc3.rSUTMQoduxBL7beOVMngFG9He7l/bcEM/p.oABvkLWMvDW"/>
-    </insert>
+        <insert tableName="users">
+            <column name="username" value="user"/>
+            <column name="password_hash" value="$2a$12$1f0Jc3.rSUTMQoduxBL7beOVMngFG9He7l/bcEM/p.oABvkLWMvDW"/>
+        </insert>
 
-    <insert tableName="users">
-        <column name="username" value="carol"/>
-        <column name="password_hash" value="$2a$12$NP0EqxC8gD9uiwf0MQXMNuf7ZELlX/uBs6dwhEfeARpmcbpDEtsi."/>
-    </insert>
-</changeSet>
+        <insert tableName="users">
+            <column name="username" value="carol"/>
+            <column name="password_hash" value="$2a$12$NP0EqxC8gD9uiwf0MQXMNuf7ZELlX/uBs6dwhEfeARpmcbpDEtsi."/>
+        </insert>
+    </changeSet>
 
+    <!-- ===== ChangeSet #4: add pet type OTHER ===== -->
+    <changeSet id="4-add-pet-type-other" author="daria" context="prod">
+        <insert tableName="pet_type">
+            <column name="code" value="OTHER"/>
+            <column name="name" value="Other"/>
+        </insert>
+    </changeSet>
+
+    <!-- ===== ChangeSet #5: DB CHECK constraints for pets ===== -->
+    <changeSet id="5-pets-check-constraints" author="daria" context="prod">
+
+        <sql>ALTER TABLE pets ADD CONSTRAINT chk_pets_ident_num_digits CHECK (identification_number ~ '^[0-9]{1,12}$');</sql>
+        <sql>ALTER TABLE pets ADD CONSTRAINT chk_pets_name_pattern CHECK (name ~ '^[[:alnum:] _()]+$');</sql>
+        <sql>ALTER TABLE pets ADD CONSTRAINT chk_pets_fur_color_letters CHECK (fur_color ~ '^[[:alpha:] ]+$');</sql>
+        <rollback>
+            <sql>ALTER TABLE pets DROP CONSTRAINT IF EXISTS chk_pets_ident_num_digits;</sql>
+            <sql>ALTER TABLE pets DROP CONSTRAINT IF EXISTS chk_pets_name_pattern;</sql>
+            <sql>ALTER TABLE pets DROP CONSTRAINT IF EXISTS chk_pets_fur_color_letters;</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- ===== ChangeSet #6: soft delete for pets ===== -->
+    <changeSet id="6-pets-add-active" author="daria" context="prod">
+        <addColumn tableName="pets">
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <update tableName="pets">
+            <column name="active" valueBoolean="true"/>
+        </update>
+
+        <rollback>
+            <dropColumn tableName="pets" columnName="active"/>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

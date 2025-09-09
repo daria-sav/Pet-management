@@ -9,4 +9,5 @@ public class PetDto {
     public String typeName;
     public Long countryId;
     public String countryName;
+    public Boolean active;
 }

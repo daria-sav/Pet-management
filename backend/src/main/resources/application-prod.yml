@@ -18,4 +18,4 @@ server:
 app:
   jwt:
     secret: "thisIsMysecregtfrdesww233eggtffeeddgkjjhhtdhttebd54ndhdhfhhhshs8877465sbbdd"
-    expirationMillis: 86400000 # 24h
+    expirationMillis: 7200000 # 2h
